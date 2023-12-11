@@ -2,7 +2,13 @@ package ru.kata.spring.boot_security.demo.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.GenerationType;
+import javax.persistence.ManyToMany;
 import java.util.Set;
 
 @Entity
@@ -27,15 +33,6 @@ public class Role implements GrantedAuthority {
     @Override
     public String getAuthority() {
         return role;
-    }
-
-    @Override
-    public String toString() {
-        return "Role{" +
-               "id=" + id +
-               ", role='" + role + '\'' +
-               ", userSet=" + userSet +
-               '}';
     }
 
     public String getRole() {
@@ -64,5 +61,14 @@ public class Role implements GrantedAuthority {
 
     public void setUserSet(Set<User> userSet) {
         this.userSet = userSet;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+               "id=" + id +
+               ", role='" + role + '\'' +
+               ", userSet=" + userSet +
+               '}';
     }
 }

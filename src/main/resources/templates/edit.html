@@ -6,10 +6,8 @@
     <title>edit</title>
 </head>
 <body>
+<input style="color: blue" type="button" value="Logout" onclick="window.location.href = '/logout'"/>
 <h2>User Correction</h2>
-
-<input style="color: blue" type="button" value="<<Back"   onclick="window.location.href = '/admin'"/>
-
 
 <form th:action="@{/admin/saveOrUpdateUser}" th:object="${user}" th:method="POST">
     <input type="hidden" th:field="*{id}">
@@ -38,6 +36,9 @@
     <br/>
 
     <input type="submit" value="Update"/>
+    <br/>
+    <br/>
+    <input style="color: blue" type="button" value="<<Back" onclick="window.location.href = '/admin'"/>
 </form>
 </body>
 </html>

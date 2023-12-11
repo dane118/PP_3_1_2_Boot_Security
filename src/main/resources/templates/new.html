@@ -6,9 +6,8 @@
     <title>new</title>
 </head>
 <body>
+<input style="color: blue" type="button" value="Logout"   onclick="window.location.href = '/logout'"/>
 <h2>User Creation</h2>
-
-<input style="color: blue" type="button" value="<<Back"   onclick="window.location.href = '/admin'"/>
 
 
 <form th:action="@{/admin/saveOrUpdateUser}" th:object="${user}" th:method="POST">
@@ -43,6 +42,11 @@
     <br/>
 
     <input type="submit" value="Create"/>
+    <br/>
+    <br/>
+
+    <input style="color: blue" type="button" value="<<Back"   onclick="window.location.href = '/admin'"/>
+
 </form>
 </body>
 </html>

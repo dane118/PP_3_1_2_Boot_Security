@@ -5,10 +5,24 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.ManyToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -22,25 +36,22 @@ public class User implements UserDetails {
     @NotBlank(message = "Поле surname не должно быть пустым")
     private String surname;
     @NotBlank(message = "Поле email не должно быть пустым")
-    private String email; // сделай как нибудь UNIQUE
+    @Email
+    @Column(unique = true)
+    private String email;
+    private String password;
 
+    @Positive(message = "Поле age не может быть отрицательным")
+    private Byte age;
 
-    private String password = "$2a$12$JGhm4Oi7YXxSqPxl94j/WOpF0Hn0/mSvvVHMI/U.5FKe5FxAQHOPC";
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
+    @Positive(message = "Поле salary не может быть отрицательным")
+    private Integer salary;
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles"
             , joinColumns = @JoinColumn(name = "user_id")
             , inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
-    @Positive(message = "Поле age не может быть отрицательным")
-    private Byte age;
-    @Positive(message = "Поле salary не может быть отрицательным")
-    private Integer salary;
 
     public User() {
     }
@@ -63,15 +74,33 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String toString() {
-        return "User{" +
-               "id=" + id +
-               ", name='" + name + '\'' +
-               ", surname='" + surname + '\'' +
-               ", email='" + email + '\'' +
-               ", age=" + age +
-               ", salary=" + salary +
-               '}';
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<Role> roles = this.getRoles();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
+        }
+        return authorities;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public Long getId() {
@@ -122,14 +151,8 @@ public class User implements UserDetails {
         this.salary = salary;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<Role> roles = this.getRoles();
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
-        }
-        return authorities;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPassword() {
@@ -141,31 +164,23 @@ public class User implements UserDetails {
         return null;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
     public Set<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", surname='" + surname + '\'' +
+               ", email='" + email + '\'' +
+               ", age=" + age +
+               ", salary=" + salary +
+               '}';
     }
 }

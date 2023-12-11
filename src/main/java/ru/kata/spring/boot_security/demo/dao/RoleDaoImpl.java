@@ -2,7 +2,6 @@ package ru.kata.spring.boot_security.demo.dao;
 
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.model.Role;
-import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
@@ -17,6 +16,7 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Role> getAllRoles() {
         return entityManager.createQuery("from Role").getResultList();
     }

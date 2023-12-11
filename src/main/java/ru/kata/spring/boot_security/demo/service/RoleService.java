@@ -16,5 +16,5 @@ public interface RoleService {
 
     void addNewRole(Role role);
 
-    Set<Role> getRolesByArrayIds(Long...idRoles);
+    Set<Role> getRolesByArrayIds(Long... idRoles);
 }
