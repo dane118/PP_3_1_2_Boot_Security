@@ -7,7 +7,11 @@
 </head>
 <body>
 <h2>User Creation</h2>
-<form th:action="@{/users/admin/saveOrUpdateUser}" th:object="${user}" th:method="POST">
+
+<input style="color: blue" type="button" value="<<Back"   onclick="window.location.href = '/admin'"/>
+
+
+<form th:action="@{/admin/saveOrUpdateUser}" th:object="${user}" th:method="POST">
     Name:
     <input type="text" th:field="*{name}"/>
     <form th:errors="*{name}" type="text"></form>
@@ -27,8 +31,17 @@
     Salary:
     <input type="text" th:field="*{salary}"/>
 <!--    <form th:errors="*{salary}" type="text">-->
+    <br/>
+    Password:
+    <input type="text" th:field="*{password}"/>
+    <br/>
+
+    <select id="role" name="selectedRoles" multiple="multiple">
+        <option th:each="role : ${listRoles}" th:id="${role.id}" th:value="${role.id}" th:text="${role.role}"></option>
+    </select>
 
     <br/>
+
     <input type="submit" value="Create"/>
 </form>
 </body>

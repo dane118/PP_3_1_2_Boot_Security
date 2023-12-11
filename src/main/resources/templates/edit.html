@@ -7,7 +7,11 @@
 </head>
 <body>
 <h2>User Correction</h2>
-<form th:action="@{/users/admin/saveOrUpdateUser}" th:object="${user}" th:method="POST">
+
+<input style="color: blue" type="button" value="<<Back"   onclick="window.location.href = '/admin'"/>
+
+
+<form th:action="@{/admin/saveOrUpdateUser}" th:object="${user}" th:method="POST">
     <input type="hidden" th:field="*{id}">
     Name:
     <input type="text" th:field="*{name}"/>
@@ -24,6 +28,15 @@
     Salary:
     <input type="text" th:field="*{salary}"/>
     <br/>
+    Password:
+    <input type="text" th:field="*{password}"/>
+    <br/>
+
+    <select id="role" name="selectedRoles" multiple="multiple">
+        <option th:each="role : ${listRoles}" th:id="${role.id}" th:value="${role.id}" th:text="${role.role}"></option>
+    </select>
+    <br/>
+
     <input type="submit" value="Update"/>
 </form>
 </body>

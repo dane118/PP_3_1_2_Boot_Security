@@ -7,7 +7,10 @@
 </head>
 <body>
 <h2>Table Users</h2>
-<input type="button" value="Add User" onclick="window.location.href = 'users/admin/new'">
+<input style="color: blue" type="button" value="Logout"   onclick="window.location.href = '/logout'"/>
+<br>
+<br>
+<input type="button" value="Add User" onclick="window.location.href = 'admin/new'">
 <br>
 <br>
 <div>
@@ -30,13 +33,13 @@
             <td th:utext="${user.getAge()}"></td>
             <td th:utext="${user.getSalary()}"></td>
             <td>
-                <form th:method="POST" th:action="@{/users/admin/delete?id={id}(id=${user.getId()})}">
+                <form th:method="POST" th:action="@{/admin/delete?id={id}(id=${user.getId()})}">
                     <input type="submit" value="Delete">
                 </form>
 
             </td>
             <td>
-                <form th:method="POST" th:action="@{/users/admin/edit?id={id}(id=${user.getId()})}">
+                <form th:method="POST" th:action="@{/admin/edit?id={id}(id=${user.getId()})}">
                     <input type="submit" value="Update">
                 </form>
                 </form>

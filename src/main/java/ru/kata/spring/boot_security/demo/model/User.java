@@ -8,10 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -26,13 +23,15 @@ public class User implements UserDetails {
     private String surname;
     @NotBlank(message = "Поле email не должно быть пустым")
     private String email; // сделай как нибудь UNIQUE
-    private String password;
+
+
+    private String password = "$2a$12$JGhm4Oi7YXxSqPxl94j/WOpF0Hn0/mSvvVHMI/U.5FKe5FxAQHOPC";
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles"
             , joinColumns = @JoinColumn(name = "user_id")

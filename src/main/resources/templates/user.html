@@ -5,6 +5,29 @@
     <title>Title</title>
 </head>
 <body>
-This is user page
+<h2>User information</h2>
+<br>
+<input style="color: blue" type="button" value="Logout"   onclick="window.location.href = '/logout'"/>
+<br>
+<br>
+<table border="2">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Email</th>
+        <th>Age</th>
+        <th>Salary</th>
+    </tr>
+    <tr th:each="users : ${user}">
+        <td th:utext="${users.getId()}"></td>
+        <td th:utext="${users.getName()}"></td>
+        <td th:utext="${users.getSurname()}"></td>
+        <td th:utext="${users.getEmail()}"></td>
+        <td th:utext="${users.getAge()}"></td>
+        <td th:utext="${users.getSalary()}"></td>
+    </tr>
+</table>
+
 </body>
 </html>
