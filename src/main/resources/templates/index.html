@@ -4,10 +4,146 @@
 <head>
     <meta charset="UTF-8">
     <title>index</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 </head>
 <body>
-<input style="color: blue" type="button" value="Logout" onclick="window.location.href = '/logout'"/>
-<br>
+
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <a class="text-light nav-link active nav-link" href="/logout">Logout</a>
+
+</nav>
+<h1>Admin panel</h1>
+
+
+
+
+
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+           role="tab" aria-controls="nav-home" aria-selected="true">User table</a>
+        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+           role="tab" aria-controls="nav-profile" aria-selected="false">New User</a>
+    </div>
+</nav>
+
+<div class="tab-content bg-white" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+         aria-labelledby="nav-home-tab">
+        <div class="card">
+            <div class="card-header">
+                <h2>All user</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Email</th>
+                        <th>Age</th>
+                        <th>Salary</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:utext="${user.getId()}"></td>
+                        <td th:utext="${user.getName()}"></td>
+                        <td th:utext="${user.getSurname()}"></td>
+                        <td th:utext="${user.getEmail()}"></td>
+                        <td th:utext="${user.getAge()}"></td>
+                        <td th:utext="${user.getSalary()}"></td>
+                        <td>
+                            <form th:method="POST" th:action="@{/admin/edit?id={id}(id=${user.getId()})}">
+                                <button type="submit" class="btn btn-info" value="Delete">Edit</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form th:method="POST" th:action="@{/admin/delete?id={id}(id=${user.getId()})}">
+                                <button type="submit" class="btn btn-danger" value="Delete">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+        <div class="card">
+            <div class="card-header">
+                <h2>Add new user</h2>
+            </div>
+            <div class="card-body">
+
+                <form>
+
+
+                    <div class="form-group">
+                        <label class="col-text-center" for="exampleFormControlInput1">Name</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput1">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="exampleFormControlInput2">Surname</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput2">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleFormControlInput3">Email</label>
+                        <input type="email" class="form-control" id="exampleFormControlInput3">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleFormControlInput4">Age</label>
+                        <input type="number" class="form-control" id="exampleFormControlInput4">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleFormControlInput5">Salary</label>
+                        <input type="number" class="form-control" id="exampleFormControlInput5">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleFormControlInput6">Password</label>
+                        <input type="text" class="form-control" id="exampleFormControlInput6">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Role</label>
+                        <select multiple class="form-control" id="exampleFormControlSelect1">
+                            <option>User</option>
+                            <option>Admin</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-success">Add new user</button>
+
+                </form>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+<!--ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd-->
 <br>
 <input style="color: blue" type="button" value="User info" onclick="window.location.href = '/user'"/>
 <h2>Table Users</h2>
@@ -15,39 +151,16 @@
 <input type="button" value="Add User" onclick="window.location.href = 'admin/new'">
 <br>
 <br>
-<div>
-    <table border="2">
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Surname</th>
-            <th>Email</th>
-            <th>Age</th>
-            <th>Salary</th>
-            <th>On Delete</th>
-            <th>On Update</th>
-        </tr>
-        <tr th:each="user : ${users}">
-            <td th:utext="${user.getId()}"></td>
-            <td th:utext="${user.getName()}"></td>
-            <td th:utext="${user.getSurname()}"></td>
-            <td th:utext="${user.getEmail()}"></td>
-            <td th:utext="${user.getAge()}"></td>
-            <td th:utext="${user.getSalary()}"></td>
-            <td>
-                <form th:method="POST" th:action="@{/admin/delete?id={id}(id=${user.getId()})}">
-                    <input type="submit" value="Delete">
-                </form>
 
-            </td>
-            <td>
-                <form th:method="POST" th:action="@{/admin/edit?id={id}(id=${user.getId()})}">
-                    <input type="submit" value="Update">
-                </form>
-                </form>
-            </td>
-        </tr>
-    </table>
-</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 </html>
