@@ -1,14 +1,25 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.GrantedAuthority;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
+import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -22,16 +33,20 @@ public class AdminController {
     }
 
     @GetMapping()
-    public String showAllUsers(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
-        return "index";
-    }
+    public String showAllUsers(Model model, Principal principal) {
 
-    @GetMapping("/new")
-    public String addNewUser(Model model) {
-        model.addAttribute("user", new User());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<String> roles = authentication.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("userRoles", roles);
+        model.addAttribute("userAuth", userService.getUserByEmail(principal.getName()));
         model.addAttribute("listRoles", roleService.getAllRoles());
-        return "new";
+        model.addAttribute("newUser", new User());
+        return "index";
     }
 
     @PostMapping("/saveOrUpdateUser")
@@ -44,13 +59,6 @@ public class AdminController {
             userService.addOrUpdateUser(user);
         }
         return "redirect:/admin";
-    }
-
-    @PostMapping("/edit")
-    public String updateUser(@RequestParam("id") Long id, Model model) {
-        model.addAttribute("user", userService.getById(id));
-        model.addAttribute("listRoles", roleService.getAllRoles());
-        return "edit";
     }
 
     @PostMapping("/delete")
