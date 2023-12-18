@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -19,6 +20,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -51,12 +53,12 @@ public class AdminController {
 
     @PostMapping("/saveOrUpdateUser")
     public String saveUser(@Valid @ModelAttribute("user") User user
-            , BindingResult result
-            , @RequestParam("selectedRoles") Long[] selectRoles) {
+            , @RequestParam("selectedRoles") Long[] selectRoles
+            , BindingResult result) {
 
-        user.setRoles(roleService.getRolesByArrayIds(selectRoles));
         if (!result.hasErrors()) {
-            userService.addOrUpdateUser(user);
+            Set<Role> rolesByArrayIds = roleService.getRolesByArrayIds(selectRoles);
+            userService.addOrUpdateUser(user, rolesByArrayIds);
         }
         return "redirect:/admin";
     }

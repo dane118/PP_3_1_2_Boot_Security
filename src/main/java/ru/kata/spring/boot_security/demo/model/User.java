@@ -46,11 +46,18 @@ public class User implements UserDetails {
 
     @Positive(message = "Поле salary не может быть отрицательным")
     private Integer salary;
+    //        @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    //    @JoinTable(
+    //            name = "users_roles"
+    //            , joinColumns = @JoinColumn(name = "user_id")
+    //            , inverseJoinColumns = @JoinColumn(name = "role_id"))
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "users_roles"
-            , joinColumns = @JoinColumn(name = "user_id")
-            , inverseJoinColumns = @JoinColumn(name = "role_id"))
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "role_id"))
     private Set<Role> roles;
 
     public User() {
@@ -75,12 +82,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<Role> roles = this.getRoles();
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
-        }
-        return authorities;
+        return getRoles();
     }
 
     @Override
@@ -161,7 +163,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return getEmail();
     }
 
     public Set<Role> getRoles() {
