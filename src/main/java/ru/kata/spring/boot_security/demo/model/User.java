@@ -1,8 +1,9 @@
 package ru.kata.spring.boot_security.demo.model;
 
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
@@ -13,15 +14,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Column;
 import javax.persistence.ManyToMany;
 import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -39,6 +37,7 @@ public class User implements UserDetails {
     @Email
     @Column(unique = true)
     private String email;
+    @NotBlank(message = "Поле password не должно быть пустым")
     private String password;
 
     @Positive(message = "Поле age не может быть отрицательным")
@@ -46,12 +45,9 @@ public class User implements UserDetails {
 
     @Positive(message = "Поле salary не может быть отрицательным")
     private Integer salary;
-    //        @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    //    @JoinTable(
-    //            name = "users_roles"
-    //            , joinColumns = @JoinColumn(name = "user_id")
-    //            , inverseJoinColumns = @JoinColumn(name = "role_id"))
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+
+    @ManyToMany(cascade = CascadeType.REFRESH)
+    @LazyCollection(LazyCollectionOption.TRUE)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(
