@@ -4,11 +4,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -36,12 +38,12 @@ public class AdminController {
 
     @PostMapping("/saveOrUpdateUser")
     public String saveUser(@Valid @ModelAttribute("user") User user
-            , BindingResult result
-            , @RequestParam("selectedRoles") Long[] selectRoles) {
+            , @RequestParam("selectedRoles") Long[] selectRoles
+            , BindingResult result) {
 
-        user.setRoles(roleService.getRolesByArrayIds(selectRoles));
         if (!result.hasErrors()) {
-            userService.addOrUpdateUser(user);
+            Set<Role> rolesByArrayIds = roleService.getRolesByArrayIds(selectRoles);
+            userService.addOrUpdateUser(user, rolesByArrayIds);
         }
         return "redirect:/admin";
     }

@@ -39,6 +39,7 @@ public class User implements UserDetails {
     @Email
     @Column(unique = true)
     private String email;
+    @NotBlank(message = "Поле password не должно быть пустым")
     private String password;
 
     @Positive(message = "Поле age не может быть отрицательным")
@@ -46,7 +47,7 @@ public class User implements UserDetails {
 
     @Positive(message = "Поле salary не может быть отрицательным")
     private Integer salary;
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.REFRESH)
     @JoinTable(
             name = "users_roles"
             , joinColumns = @JoinColumn(name = "user_id")
@@ -75,12 +76,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<Role> roles = this.getRoles();
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
-        }
-        return authorities;
+        return getRoles();
     }
 
     @Override
@@ -161,7 +157,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return getEmail();
     }
 
     public Set<Role> getRoles() {
