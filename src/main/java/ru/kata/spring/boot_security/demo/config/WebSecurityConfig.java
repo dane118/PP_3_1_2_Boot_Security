@@ -12,6 +12,7 @@ import ru.kata.spring.boot_security.demo.security.UserSecurity;
 
 @Configuration
 @EnableWebSecurity
+//@Profile(value = "java")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
     private final UserSecurity userSecurity;
@@ -29,6 +30,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/api/users/**").permitAll() // сняли секъюрность
+                .antMatchers("/api/roles/**").permitAll() // сняли секъюрность
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -38,6 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .permitAll();
+
     }
 
     @Bean
